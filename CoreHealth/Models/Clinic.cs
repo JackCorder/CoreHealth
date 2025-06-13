@@ -9,5 +9,9 @@ namespace CoreHealth.Models
         public string Name { get; set; }
         public string? Description { get; set; }
         public int? DoctorId { get; set; }
+
+        //nav propierties
+
+        public IEnumerable<Appointment>? Appointment { get; set; }
     }
 }

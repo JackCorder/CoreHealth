@@ -20,5 +20,8 @@ namespace CoreHealth.Models
         public string? NSS { get; set; }
 
         //Nav Propierties
+
+        public IEnumerable<Appointment>? Appointment { get; set; }
+        public IEnumerable<ClinicHistory>? ClinicHistory { get; set; }
     }
 }

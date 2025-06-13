@@ -14,5 +14,11 @@ namespace CoreHealth.Models
         public string Phone { get; set; }
         [Required]
         public string Email { get; set; }
+
+        //nav propierties
+        public IEnumerable<Appointment>? Appointment { get; set; }
+        public IEnumerable<Clinic>? Clinic { get; set; }
+        public IEnumerable<Prescription>? Prescription { get; set; }
+
     }
 }

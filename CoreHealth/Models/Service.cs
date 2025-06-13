@@ -11,5 +11,8 @@ namespace CoreHealth.Models
         public string Description { get; set; }
         [Required]
         public decimal Cost { get; set; }
+
+        //nav propierties 
+        public IEnumerable<Appointment>? Appointment { get; set; }
     }
 }
