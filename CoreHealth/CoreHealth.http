@@ -1,0 +1,6 @@
+@CoreHealth_HostAddress = http://localhost:5123
+
+GET {{CoreHealth_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
