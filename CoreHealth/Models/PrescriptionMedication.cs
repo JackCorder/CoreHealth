@@ -4,6 +4,7 @@ namespace CoreHealth.Models
 {
     public class PrescriptionMedication
     {
+        public int Id { get; set; }
         [Required]
         public int PrescriptionId { get; set; }
         [Required]

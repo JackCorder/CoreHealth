@@ -13,5 +13,6 @@ namespace CoreHealth.Models
         //nav propierties
 
         public IEnumerable<Appointment>? Appointment { get; set; }
+        public Doctor? Doctor { get; set; }
     }
 }
