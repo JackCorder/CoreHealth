@@ -1,3 +1,4 @@
+using CoreHealth.Settings;
 using EcommerceRESTGen6.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Conexion con la Base de Datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
 // Add services to the container.
 
