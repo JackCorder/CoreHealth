@@ -13,6 +13,8 @@ namespace CoreHealth.Models
         [Required]
         public string AdministrationWay { get; set; }
 
+        public string urlImage { get; set; }
+
         //Nav Propierties
         public IEnumerable<PrescriptionMedication>? PrescriptionMedication { get; set; }
 
