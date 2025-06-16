@@ -12,6 +12,8 @@ namespace CoreHealth.DTOs
         public string? Description { get; set; }
         [Display(Name ="Doctor Asignado")]
         public int? DoctorId { get; set; }
+        [Display(Name="Doctor Asignado")]
+        public string? DoctorName {  get; set; }
 
     }
 }

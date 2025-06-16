@@ -23,5 +23,6 @@ namespace CoreHealth.DTOs
         public string? Treatment { get; set; }
         [Display(Name ="Servicio ofrecido")]
         public int? ServiceId { get; set; }
+        
     }
 }
