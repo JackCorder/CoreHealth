@@ -1,0 +1,98 @@
+﻿using CoreHealth.DTOs;
+using CoreHealth.Models;
+using CoreHealth.Settings;
+using EcommerceRESTGen6.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace CoreHealth.Services
+{
+    public class DoctorService:IDoctorService
+    {
+        private readonly UploadSettings _uploadSettings;
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
+        private DoctorService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        {
+            _uploadSettings = uploadSettings;
+            _context = context;
+            _env = env;
+        }
+        public async Task<List<DoctorDTO>> GetAllAsync()
+        {
+            var doctors = await _context.Doctor
+                .Select(static d => new DoctorDTO
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Area = d.Area,
+                    License = d.License,
+                    Phone = d.Phone,
+                    Email = d.Email
+                })
+                .ToListAsync();
+
+            return doctors;
+        }
+        public async Task<DoctorDTO> GetByIdAsync(int id)
+        {
+            var doctor = await _context.Doctor
+                .Where(d => d.Id == id)
+                .Select(d => new DoctorDTO
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Area = d.Area,
+                    License = d.License,
+                    Phone = d.Phone,
+                    Email = d.Email
+                })
+                .FirstOrDefaultAsync();
+
+            if (doctor == null)
+                throw new ApplicationException("Doctor no encontrado");
+
+            return doctor;
+        }
+        public async Task AddAsync(DoctorDTO doctorDTO)
+        {
+            var doctor = new Doctor
+            {
+                Name = doctorDTO.Name,
+                Area = doctorDTO.Area,
+                License = doctorDTO.License,
+                Phone = doctorDTO.Phone,
+                Email = doctorDTO.Email
+            };
+
+            await _context.Doctor.AddAsync(doctor);
+            await _context.SaveChangesAsync();
+
+            doctorDTO.Id = doctor.Id;
+        }
+        public async Task UpdateAsync(DoctorDTO doctorDTO)
+        {
+            var doctor = await _context.Doctor.FindAsync(doctorDTO.Id);
+            if (doctor == null) throw new ApplicationException("Doctor no encontrado");
+
+            doctor.Name = doctorDTO.Name;
+            doctor.Area = doctorDTO.Area;
+            doctor.License = doctorDTO.License;
+            doctor.Phone = doctorDTO.Phone;
+            doctor.Email = doctorDTO.Email;
+
+            _context.Doctor.Update(doctor);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(int id)
+        {
+            var doctor = await _context.Doctor.FindAsync(id);
+            if (doctor == null) throw new ApplicationException("Doctor no encontrado");
+
+            _context.Doctor.Remove(doctor);
+            await _context.SaveChangesAsync();
+        }
+
+
+
+    }
+}
