@@ -2,7 +2,7 @@
 
 namespace CoreHealth.DTOs
 {
-    public class PatientDTO
+    public class PatientDTO : RegistryDTO
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "El nombre del paciente es obligatorio")]

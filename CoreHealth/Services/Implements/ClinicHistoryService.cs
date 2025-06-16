@@ -1,19 +1,19 @@
 ﻿using CoreHealth.DTOs;
+using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoreHealth.Services.Implements
 {
     public class ClinicHistoryService : IClinicHistoryService 
     {
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private ClinicHistoryService(ApplicationDbContext context, IWebHostEnvironment env)
+        private ClinicHistoryService(ApplicationDbContext context)
         {
             _context = context;
-            _env = env;
         }
         public async Task<List<ClinicHistoryDTO>> GetAllAsync()
         {
@@ -49,45 +49,36 @@ namespace CoreHealth.Services.Implements
             return clinicHistory;
         }
 
-        public async Task AddAsync(AppointmentDTO AppointmentDTO)
+        public async Task AddAsync(ClinicHistoryDTO clinicHistoryDTO)
         {
-            var Appointment = new Appointment
+            var clinicHistory = new ClinicHistory
             {
-                Id = AppointmentDTO.Id,
-                Date = AppointmentDTO.Date,
-                PatientId = AppointmentDTO.PatientId,
-                ClinicId = AppointmentDTO.ClinicId,
-                Reason = AppointmentDTO.Reason,
-                Diagnostic = AppointmentDTO.Diagnostic,
-                Treatment = AppointmentDTO.Treatment,
-                ServiceId = AppointmentDTO.ServiceId
+                Date = clinicHistoryDTO.Date,
+                PatientId = clinicHistoryDTO.PatientId,
+                Description = clinicHistoryDTO.Description
             };
-            await _context.Appointment.AddAsync(Appointment);
+            await _context.ClinicHistory.AddAsync(clinicHistory);
             await _context.SaveChangesAsync();
-            AppointmentDTO.Id = Appointment.Id;
+            clinicHistoryDTO.Id = clinicHistory.Id;
         }
-        public async Task UpdateAsync(AppointmentDTO AppointmenttDTO)
+        public async Task UpdateAsync(ClinicHistoryDTO clinicHistoryDTO)
         {
-            var Appointment = await _context.Appointment
-                .FindAsync(AppointmenttDTO.Id);
-            if (Appointment == null) throw new ApplicationException("Consultorio no encontrado");
-            Appointment.Date = AppointmenttDTO.Date;
-            Appointment.PatientId = AppointmenttDTO.PatientId;
-            Appointment.ClinicId = Appointment.ClinicId;
-            Appointment.Reason = AppointmenttDTO.Reason;
-            Appointment.Diagnostic = AppointmenttDTO.Diagnostic;
-            Appointment.Treatment = Appointment.Treatment;
-            Appointment.ServiceId = AppointmenttDTO.ServiceId;
-            _context.Appointment.Update(Appointment);
+            var clinicHistory = await _context.ClinicHistory
+                .FindAsync(clinicHistoryDTO.Id);
+            if (clinicHistory == null) throw new ApplicationException("historial clinico no encontrado");
+            clinicHistory.Date = clinicHistoryDTO.Date;
+            clinicHistory.PatientId = clinicHistoryDTO.PatientId;
+            clinicHistory.Description = clinicHistoryDTO.Description;
+            _context.ClinicHistory.Update(clinicHistory);
             await _context.SaveChangesAsync();
 
         }
         public async Task DeleteAsync(int id)
         {
-            var Appointment = await _context.Appointment
+            var clinicHistory = await _context.ClinicHistory
                 .FindAsync(id);
-            if (Appointment == null) throw new ApplicationException("Consultorio no encontrado");
-            _context.Appointment.Remove(Appointment);
+            if (clinicHistory == null) throw new ApplicationException("Historial clinico no encontrado");
+            _context.ClinicHistory.Remove(clinicHistory);
             await _context.SaveChangesAsync();
         }
     }

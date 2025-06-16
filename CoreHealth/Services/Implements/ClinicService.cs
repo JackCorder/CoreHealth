@@ -3,7 +3,7 @@ using CoreHealth.DTOs;
 using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreHealth.Services.Implements
