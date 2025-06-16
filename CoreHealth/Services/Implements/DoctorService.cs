@@ -1,10 +1,11 @@
 ﻿using CoreHealth.DTOs;
 using CoreHealth.Models;
+using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
 using EcommerceRESTGen6.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Implements
 {
     public class DoctorService:IDoctorService
     {

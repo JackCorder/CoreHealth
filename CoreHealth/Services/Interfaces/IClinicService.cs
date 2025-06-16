@@ -1,6 +1,6 @@
 ﻿using CoreHealth.DTOs;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Interfaces
 {
     public interface IClinicService
     {

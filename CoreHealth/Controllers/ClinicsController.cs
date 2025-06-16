@@ -1,5 +1,5 @@
 ﻿using CoreHealth.DTOs;
-using CoreHealth.Services;
+using CoreHealth.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

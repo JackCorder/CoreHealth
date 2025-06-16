@@ -1,61 +1,54 @@
 ﻿using CoreHealth.DTOs;
-using CoreHealth.Models;
+using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
 using EcommerceRESTGen6.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Implements
 {
-    public class AppointmentService:IAppointmentService
+    public class ClinicHistoryService : IClinicHistoryService 
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
-        private AppointmentService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        private ClinicHistoryService(ApplicationDbContext context, IWebHostEnvironment env)
         {
-            _uploadSettings = uploadSettings;
             _context = context;
             _env = env;
         }
-        public async Task<List<AppointmentDTO>> GetAllAsync()
+        public async Task<List<ClinicHistoryDTO>> GetAllAsync()
         {
-            var appointments = await _context.Appointment
-        .Select(static a => new AppointmentDTO
-        {
-            Id = a.Id,
-            Date = a.Date,
-            PatientId = a.PatientId,
-            ClinicId = a.ClinicId,
-            Reason = a.Reason,
-            Diagnostic = a.Diagnostic,
-            Treatment = a.Treatment,
-            ServiceId = a.ServiceId
-        })
-        .ToListAsync();
+            var clinicHistorys = await _context.ClinicHistory
+            .Select(static a => new ClinicHistoryDTO
+            {
+                Id = a.Id,
+                Date = a.Date,
+                PatientId = a.PatientId,
+                PatientName = a.Patient.Name,
+                Description = a.Description
+            })
+            .ToListAsync();
 
-            return appointments;
+            return clinicHistorys;
         }
-        public async Task<AppointmentDTO> GetByIdAsync(int id)
+        public async Task<ClinicHistoryDTO> GetByIdAsync(int id)
         {
-            var appointment = await _context.Appointment
+            var clinicHistory = await _context.ClinicHistory
                 .DefaultIfEmpty()
-                .Select(a=> new AppointmentDTO
+                .Select(ch => new ClinicHistoryDTO
                 {
-                    Id = a.Id,
-                    Date = a.Date,
-                    PatientId = a.PatientId,
-                    ClinicId = a.ClinicId,
-                    Reason = a.Reason,
-                    Diagnostic = a.Diagnostic,
-                    Treatment = a.Treatment,
-                    ServiceId = a.ServiceId
+                    Id = ch.Id,
+                    Date = ch.Date,
+                    PatientId = ch.PatientId,
+                    PatientName = ch.Patient.Name,
+                    Description = ch.Description
 
                 })
-                .FirstOrDefaultAsync(a => a.Id == id);
-            if (appointment == null)
-                throw new ApplicationException("Consultorio no encontrado");
-            return appointment;
+                .FirstOrDefaultAsync(ch => ch.Id == id);
+            if (clinicHistory == null)
+                throw new ApplicationException("No hay historial clinico");
+            return clinicHistory;
         }
+
         public async Task AddAsync(AppointmentDTO AppointmentDTO)
         {
             var Appointment = new Appointment
