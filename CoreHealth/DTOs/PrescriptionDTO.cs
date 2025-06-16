@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CoreHealth.DTOs
 {
-    public class PrescriptionDTO
+    public class PrescriptionDTO: RegistryDTO
     {
         public int Id { get; set; }
         [Required]

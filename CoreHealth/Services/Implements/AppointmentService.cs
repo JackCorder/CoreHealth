@@ -2,21 +2,17 @@
 using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreHealth.Services.Implements
 {
     public class AppointmentService:IAppointmentService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private AppointmentService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        private AppointmentService(ApplicationDbContext context)
         {
-            _uploadSettings = uploadSettings;
             _context = context;
-            _env = env;
         }
         public async Task<List<AppointmentDTO>> GetAllAsync()
         {
