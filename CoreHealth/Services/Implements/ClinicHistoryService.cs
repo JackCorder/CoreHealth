@@ -5,26 +5,29 @@ using CoreHealth.Settings;
 using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using CoreHealth.Constants;
 
 namespace CoreHealth.Services.Implements
 {
     public class ClinicHistoryService : IClinicHistoryService 
     {
         private readonly ApplicationDbContext _context;
-        private ClinicHistoryService(ApplicationDbContext context)
+        public ClinicHistoryService(ApplicationDbContext context)
         {
             _context = context;
         }
         public async Task<List<ClinicHistoryDTO>> GetAllAsync()
         {
             var clinicHistorys = await _context.ClinicHistory
-            .Select(static a => new ClinicHistoryDTO
+            .Where(ch => !ch.IsDelete)
+            .Select(static ch => new ClinicHistoryDTO
             {
-                Id = a.Id,
-                Date = a.Date,
-                PatientId = a.PatientId,
-                PatientName = a.Patient.Name,
-                Description = a.Description
+                Id = ch.Id,
+                Date = ch.Date,
+                PatientId = ch.PatientId,
+                PatientName = ch.Patient.Name,
+                Description = ch.Description,
+                Active = ch.Active
             })
             .ToListAsync();
 
@@ -40,8 +43,8 @@ namespace CoreHealth.Services.Implements
                     Date = ch.Date,
                     PatientId = ch.PatientId,
                     PatientName = ch.Patient.Name,
-                    Description = ch.Description
-
+                    Description = ch.Description,
+                    Active = ch.Active
                 })
                 .FirstOrDefaultAsync(ch => ch.Id == id);
             if (clinicHistory == null)
@@ -69,6 +72,7 @@ namespace CoreHealth.Services.Implements
             clinicHistory.Date = clinicHistoryDTO.Date;
             clinicHistory.PatientId = clinicHistoryDTO.PatientId;
             clinicHistory.Description = clinicHistoryDTO.Description;
+            clinicHistory.Active = clinicHistoryDTO.Active;
             _context.ClinicHistory.Update(clinicHistory);
             await _context.SaveChangesAsync();
 
@@ -77,8 +81,11 @@ namespace CoreHealth.Services.Implements
         {
             var clinicHistory = await _context.ClinicHistory
                 .FindAsync(id);
-            if (clinicHistory == null) throw new ApplicationException("Historial clinico no encontrado");
-            _context.ClinicHistory.Remove(clinicHistory);
+            if (clinicHistory == null) throw new ApplicationException(Messages.Error.MedicalRecordNotFound);
+
+            if (clinicHistory.IsDelete) throw new ApplicationException(Messages.Error.MedicalRecordDeleteError);
+            clinicHistory.IsDelete = true;
+            _context.ClinicHistory.Update(clinicHistory);
             await _context.SaveChangesAsync();
         }
     }

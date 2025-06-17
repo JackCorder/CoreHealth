@@ -3,25 +3,28 @@ using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
+using CoreHealth.Constants;
 
 namespace CoreHealth.Services.Implements
 {
     public class ServiceService : IServiceService
     {
         private readonly ApplicationDbContext _context;
-        private ServiceService(ApplicationDbContext context)
+        public ServiceService(ApplicationDbContext context)
         {
             _context = context;
         }
         public async Task<List<ServiceDTO>> GetAllAsync()
         {
             var service = await _context.Service
+            .Where(s => !s.IsDelete)
             .Select(static s => new ServiceDTO
             {
                 Id = s.Id,
                 Name = s.Name,
                 Description = s.Description,
-                Cost = s.Cost
+                Cost = s.Cost,
+                Active = s.Active
             })
             .ToListAsync();
 
@@ -30,17 +33,19 @@ namespace CoreHealth.Services.Implements
         public async Task<ServiceDTO> GetByIdAsync(int id)
         {
             var service = await _context.Service
+                .Where(s => !s.IsDelete)
                 .DefaultIfEmpty()
                 .Select(s => new ServiceDTO
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Description = s.Description,
-                    Cost = s.Cost
+                    Cost = s.Cost,
+                    Active = s.Active
                 })
                 .FirstOrDefaultAsync(s => s.Id == id);
             if (service == null)
-                throw new ApplicationException("No hay medicamentos asignados");
+                throw new ApplicationException(Messages.Error.ServiceNotFound);
             return service;
         }
 
@@ -60,10 +65,11 @@ namespace CoreHealth.Services.Implements
         {
             var service = await _context.Service
                 .FindAsync(serviceDTO.Id);
-            if (service == null) throw new ApplicationException("Servicio no encontrado");
+            if (service == null) throw new ApplicationException(Messages.Error.ServiceNotFound);
             service.Name = serviceDTO.Name;
             service.Description = serviceDTO.Description;
             service.Cost = serviceDTO.Cost;
+            service.Active = serviceDTO.Active;
             _context.Service.Update(service);
             await _context.SaveChangesAsync();
 
@@ -72,8 +78,12 @@ namespace CoreHealth.Services.Implements
         {
             var service = await _context.Service
                 .FindAsync(id);
-            if (service == null) throw new ApplicationException("Servicio no encontrado");
-            _context.Service.Remove(service);
+            
+            if (service == null) throw new ApplicationException(Messages.Error.ServiceNotFound);
+            if (service.IsDelete) throw new ApplicationException(Messages.Error.MedicalRecordDeleteError);
+            service.IsDelete = true;
+
+            _context.Service.Update(service);
             await _context.SaveChangesAsync();
         }
     }
