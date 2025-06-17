@@ -1,4 +1,5 @@
-﻿using CoreHealth.DTOs;
+﻿using CoreHealth.Constants;
+using CoreHealth.DTOs;
 using CoreHealth.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace CoreHealth.Controllers
 
             if (clinicHistory == null)
             {
-                return NotFound(new { message = "El elemento no existe" });     // Respuesta HTTP 404 Not Found con un mensaje
+                return NotFound(new { message = Messages.Error.MedicalRecordNotFound });     // Respuesta HTTP 404 Not Found con un mensaje
             }
 
             return Ok(clinicHistory);                                                 // Retorna 200 OK con el producto encontrado.
@@ -47,7 +48,7 @@ namespace CoreHealth.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = $"Hubo un error al agregar elemento: {ex.Message}" });
+                return BadRequest(new { message = Messages.Error.MedicalRecordCreateError + ex.Message });
             }
         }
 
@@ -55,7 +56,7 @@ namespace CoreHealth.Controllers
         public async Task<IActionResult> Update(int id, [FromForm] ClinicHistoryDTO clinicHistoryDTO)
         {
             if (id != clinicHistoryDTO.Id)
-                return BadRequest(new { message = "El ID proporcionado no coincide con el objeto" });
+                return BadRequest(new { message = Messages.Error.MedicalRecordNotFound});
 
             try
             {
@@ -64,11 +65,11 @@ namespace CoreHealth.Controllers
             }
             catch (ApplicationException ex)
             {
-                return NotFound(new { message = ex.Message }); 
+                return NotFound(new { message = Messages.Error.MedicalRecordUpdateError }); 
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = $"Error al actualizar el historial clinico: {ex.Message}" });
+                return BadRequest(new { message = Messages.Error.MedicalRecordUpdateError + ex.Message });
             }
         }
         [HttpDelete("{id}")]
@@ -85,7 +86,7 @@ namespace CoreHealth.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = $"Error al eliminar un historial clinico: {ex.Message}" });
+                return BadRequest(new { message = Messages.Error.MedicalRecordDeleteError + ex.Message });
             }
         }
 

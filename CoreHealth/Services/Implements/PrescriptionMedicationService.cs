@@ -9,7 +9,7 @@ namespace CoreHealth.Services.Implements
     public class PrescriptionMedicationService : IPrescriptionMedicationService
     {
         private readonly ApplicationDbContext _context;
-        private PrescriptionMedicationService(ApplicationDbContext context)
+        public PrescriptionMedicationService(ApplicationDbContext context)
         {
             _context = context;
         }
