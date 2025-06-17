@@ -28,7 +28,9 @@ namespace CoreHealth.Services.Implements
                     Name = c.Name,
                     Description = c.Description,
                     DoctorId = c.DoctorId,
-                    DoctorName = d.Name != null ? d.Name:"Doctor no asignado a este consultorio"
+                    DoctorName = d.Name != null ? d.Name:"Doctor no asignado a este consultorio",
+                    Active = c.Active,
+
                 }
                 )
                 .ToListAsync();
@@ -43,7 +45,10 @@ namespace CoreHealth.Services.Implements
                     Id = c.Id,
                     Name = c.Name,
                     Description = c.Description,
-                    DoctorId = c.DoctorId != null ? c.DoctorId:0
+                    DoctorId = c.DoctorId != null ? c.DoctorId:0,
+                    Active = c.Active,
+                    IsDelete = c.IsDelete,
+                    HighSystem = c.HighSystem
 
                 })
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -57,6 +62,9 @@ namespace CoreHealth.Services.Implements
             {
                 Name = clinicDTO.Name,
                 Description = clinicDTO.Description,
+                Active = clinicDTO.Active,
+                IsDelete= clinicDTO.IsDelete,
+                HighSystem= clinicDTO.HighSystem
             };
             await _context.Clinic.AddAsync(clinic);
             await _context.SaveChangesAsync();
@@ -70,6 +78,9 @@ namespace CoreHealth.Services.Implements
             clinic.Name = clinictDTO.Name;
             clinic.Description = clinictDTO.Description;           
             clinic.DoctorId = clinic.DoctorId;
+            clinic.Active = clinic.Active;
+            clinic.IsDelete = clinic.IsDelete;
+            clinic.HighSystem = clinic.HighSystem;
             _context.Clinic.Update(clinic);
             await _context.SaveChangesAsync();
 
@@ -79,7 +90,8 @@ namespace CoreHealth.Services.Implements
             var clinic = await _context.Clinic
                 .FindAsync(id);
             if (clinic == null) throw new ApplicationException("Consultorio no encontrado");
-            _context.Clinic.Remove(clinic);
+            clinic.IsDelete = true;
+            clinic.Active = false;
             await _context.SaveChangesAsync();
         }
     }

@@ -28,7 +28,10 @@ namespace CoreHealth.Services.Implements
                     Area = d.Area,
                     License = d.License,
                     Phone = d.Phone,
-                    Email = d.Email
+                    Email = d.Email,
+                    Active = d.Active,
+                    IsDelete = d.IsDelete,
+                    HighSystem = d.HighSystem,
                 })
                 .ToListAsync();
 
@@ -45,7 +48,10 @@ namespace CoreHealth.Services.Implements
                     Area = d.Area,
                     License = d.License,
                     Phone = d.Phone,
-                    Email = d.Email
+                    Email = d.Email,
+                    Active= d.Active,
+                    IsDelete = d.IsDelete,
+                    HighSystem = d.HighSystem,
                 })
                 .FirstOrDefaultAsync();
 
@@ -62,7 +68,10 @@ namespace CoreHealth.Services.Implements
                 Area = doctorDTO.Area,
                 License = doctorDTO.License,
                 Phone = doctorDTO.Phone,
-                Email = doctorDTO.Email
+                Email = doctorDTO.Email,
+                Active = doctorDTO.Active,
+                IsDelete = doctorDTO.IsDelete,
+                HighSystem = doctorDTO.HighSystem,
             };
 
             await _context.Doctor.AddAsync(doctor);
@@ -88,8 +97,8 @@ namespace CoreHealth.Services.Implements
         {
             var doctor = await _context.Doctor.FindAsync(id);
             if (doctor == null) throw new ApplicationException("Doctor no encontrado");
-
-            _context.Doctor.Remove(doctor);
+            doctor.IsDelete = true;
+            doctor.Active = false;
             await _context.SaveChangesAsync();
         }
 

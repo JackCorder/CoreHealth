@@ -26,7 +26,10 @@ namespace CoreHealth.Services.Implements
             Reason = a.Reason,
             Diagnostic = a.Diagnostic,
             Treatment = a.Treatment,
-            ServiceId = a.ServiceId
+            ServiceId = a.ServiceId,
+            Active = a.Active,
+            IsDelete = a.IsDelete,
+            HighSystem = a.HighSystem,
         })
         .ToListAsync();
 
@@ -45,7 +48,10 @@ namespace CoreHealth.Services.Implements
                     Reason = a.Reason,
                     Diagnostic = a.Diagnostic,
                     Treatment = a.Treatment,
-                    ServiceId = a.ServiceId
+                    ServiceId = a.ServiceId,
+                    Active = a.Active,
+                    IsDelete = a.IsDelete,
+                    HighSystem = a.HighSystem,
 
                 })
                 .FirstOrDefaultAsync(a => a.Id == id);
@@ -64,7 +70,10 @@ namespace CoreHealth.Services.Implements
                 Reason = AppointmentDTO.Reason,
                 Diagnostic = AppointmentDTO.Diagnostic,
                 Treatment = AppointmentDTO.Treatment,
-                ServiceId = AppointmentDTO.ServiceId
+                ServiceId = AppointmentDTO.ServiceId,
+                Active = AppointmentDTO.Active,
+                IsDelete = AppointmentDTO.IsDelete,
+                HighSystem = AppointmentDTO.HighSystem,
             };
             await _context.Appointment.AddAsync(Appointment);
             await _context.SaveChangesAsync();
@@ -82,6 +91,9 @@ namespace CoreHealth.Services.Implements
             Appointment.Diagnostic = AppointmenttDTO.Diagnostic;
             Appointment.Treatment = Appointment.Treatment;
             Appointment.ServiceId = AppointmenttDTO.ServiceId;
+            Appointment.Active = AppointmenttDTO.Active;
+            Appointment.HighSystem = AppointmenttDTO.HighSystem;
+            Appointment.IsDelete = AppointmenttDTO.IsDelete;
             _context.Appointment.Update(Appointment);
             await _context.SaveChangesAsync();
 
@@ -91,7 +103,9 @@ namespace CoreHealth.Services.Implements
             var Appointment = await _context.Appointment
                 .FindAsync(id);
             if (Appointment == null) throw new ApplicationException("Consultorio no encontrado");
-            _context.Appointment.Remove(Appointment);
+            Appointment.IsDelete = true;
+            Appointment.Active = false;
+            _context.Appointment.Update(Appointment);
             await _context.SaveChangesAsync();
         }
     }
