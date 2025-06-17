@@ -3,7 +3,7 @@ using CoreHealth.DTOs;
 using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -25,6 +25,7 @@ namespace CoreHealth.Services.Implements
         public async Task<List<MedicationDTO>> GetAllAsync()
         {
             var medications = await _context.Medication
+                .Where(m => !m.IsDelete)
                 .Select(m => new MedicationDTO
                 {
                     Id = m.Id,
@@ -53,6 +54,11 @@ namespace CoreHealth.Services.Implements
                      UrlImage = m.urlImage
                  })
                  .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (medication == null)
+            {
+                throw new ApplicationException(Messages.Error.MedicationNotFound); // Si no se encuentra, lanza una excepción
+            }
 
             //No validamos si es null, ya que la valdación se realiza en el controlador
             return medication;
@@ -102,7 +108,7 @@ namespace CoreHealth.Services.Implements
 
             //Guardar los cambios en la base de datos
             _context.Medication.Update(medication);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
 
         }
@@ -116,8 +122,9 @@ namespace CoreHealth.Services.Implements
                 throw new ApplicationException(Messages.Error.MedicationNotFound); 
             }
 
-            _context.Remove(medication);
-            _context.SaveChanges();
+            medication.IsDelete = true;
+            _context.Medication.Update(medication);
+            await _context.SaveChangesAsync();
 
         }
 
@@ -169,7 +176,7 @@ namespace CoreHealth.Services.Implements
 
             if (!permittedExtensions.Contains(extension))
             {
-                throw new NotSupportedException(Messages.Validation.UnSupportedFileType);
+                throw new NotSupportedException(Messages.Validation.UnsupportedFileType);
             }
         }
     }
