@@ -10,7 +10,7 @@ namespace CoreHealth.Services.Implements
     public class AppointmentService:IAppointmentService
     {
         private readonly ApplicationDbContext _context;
-        private AppointmentService(ApplicationDbContext context)
+        public AppointmentService(ApplicationDbContext context)
         {
             _context = context;
         }

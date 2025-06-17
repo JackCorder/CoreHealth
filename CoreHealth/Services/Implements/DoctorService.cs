@@ -9,14 +9,10 @@ namespace CoreHealth.Services.Implements
 {
     public class DoctorService:IDoctorService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private DoctorService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        public DoctorService(ApplicationDbContext context)
         {
-            _uploadSettings = uploadSettings;
             _context = context;
-            _env = env;
         }
         public async Task<List<DoctorDTO>> GetAllAsync()
         {

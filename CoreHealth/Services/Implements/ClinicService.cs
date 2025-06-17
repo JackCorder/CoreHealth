@@ -10,13 +10,9 @@ namespace CoreHealth.Services.Implements
 {
     public class ClinicService : IClinicService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private ClinicService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env) {
-            _uploadSettings = uploadSettings;
+        public ClinicService(ApplicationDbContext context) {
             _context = context;
-            _env = env;
         }
         public async Task<List<ClinicDTO>> GetAllAsync() {
             var clinics = await _context.Clinic
