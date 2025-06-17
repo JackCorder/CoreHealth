@@ -2,7 +2,7 @@
 
 namespace CoreHealth.DTOs
 {
-    public class AppointmentDTO
+    public class AppointmentDTO : RegistryDTO
     {
         public int Id { get; set; }
         [Display(Name ="Fecha de la cita")]

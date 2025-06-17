@@ -1,21 +1,18 @@
 ﻿using CoreHealth.DTOs;
 using CoreHealth.Models;
+using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Implements
 {
     public class DoctorService:IDoctorService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private DoctorService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        public DoctorService(ApplicationDbContext context)
         {
-            _uploadSettings = uploadSettings;
             _context = context;
-            _env = env;
         }
         public async Task<List<DoctorDTO>> GetAllAsync()
         {
@@ -27,7 +24,10 @@ namespace CoreHealth.Services
                     Area = d.Area,
                     License = d.License,
                     Phone = d.Phone,
-                    Email = d.Email
+                    Email = d.Email,
+                    Active = d.Active,
+                    IsDelete = d.IsDelete,
+                    HighSystem = d.HighSystem,
                 })
                 .ToListAsync();
 
@@ -44,7 +44,10 @@ namespace CoreHealth.Services
                     Area = d.Area,
                     License = d.License,
                     Phone = d.Phone,
-                    Email = d.Email
+                    Email = d.Email,
+                    Active= d.Active,
+                    IsDelete = d.IsDelete,
+                    HighSystem = d.HighSystem,
                 })
                 .FirstOrDefaultAsync();
 
@@ -61,7 +64,10 @@ namespace CoreHealth.Services
                 Area = doctorDTO.Area,
                 License = doctorDTO.License,
                 Phone = doctorDTO.Phone,
-                Email = doctorDTO.Email
+                Email = doctorDTO.Email,
+                Active = doctorDTO.Active,
+                IsDelete = doctorDTO.IsDelete,
+                HighSystem = doctorDTO.HighSystem,
             };
 
             await _context.Doctor.AddAsync(doctor);
@@ -87,8 +93,8 @@ namespace CoreHealth.Services
         {
             var doctor = await _context.Doctor.FindAsync(id);
             if (doctor == null) throw new ApplicationException("Doctor no encontrado");
-
-            _context.Doctor.Remove(doctor);
+            doctor.IsDelete = true;
+            doctor.Active = false;
             await _context.SaveChangesAsync();
         }
 
