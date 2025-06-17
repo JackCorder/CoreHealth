@@ -38,8 +38,7 @@ namespace CoreHealth.Controllers
 
         // POST api/<clinicController>
         [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm] AppointmentDTO appointmentDTO)
+        public async Task<IActionResult> Create([FromBody] AppointmentDTO appointmentDTO)
         {
             try
             {
@@ -52,7 +51,7 @@ namespace CoreHealth.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] AppointmentDTO appointmentDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] AppointmentDTO appointmentDTO)
         {
             if (id != appointmentDTO.Id)
                 return BadRequest(new { message = "El ID proporcionado no coincide con el objeto" });
@@ -71,6 +70,7 @@ namespace CoreHealth.Controllers
                 return BadRequest(new { message = $"Error al actualizar la marca: {ex.Message}" });
             }
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -62,6 +62,19 @@ namespace CoreHealth.Services.Implements
         }
         public async Task AddAsync(PatientDTO patientDTO)
         {
+            //verificar que no exista ya el nss previamente:
+            var nss = _context.Patient
+                .Select(p => new PatientDTO
+                {
+                    NSS = p.NSS
+                })
+                .FirstOrDefault(p => p.NSS == patientDTO.NSS);
+
+            if (nss.NSS == patientDTO.NSS)
+            {
+                throw new ApplicationException(Messages.Error.PatientNSSExist);
+            }
+
             var patient = new Patient
             {
                 Name = patientDTO.Name,
@@ -75,6 +88,8 @@ namespace CoreHealth.Services.Implements
 
             await _context.Patient.AddAsync(patient);
             await _context.SaveChangesAsync();
+
+            patientDTO.Id = patient.Id;
         }
         public async Task UpdateAsync(PatientDTO patientDTO)
         {
