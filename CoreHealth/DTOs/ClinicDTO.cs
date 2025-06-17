@@ -2,7 +2,7 @@
 
 namespace CoreHealth.DTOs
 {
-    public class ClinicDTO
+    public class ClinicDTO : RegistryDTO
     {
         public int Id { get; set; }
         [Display(Name="Consultorio")]

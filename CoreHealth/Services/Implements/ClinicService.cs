@@ -1,21 +1,18 @@
 ﻿using CoreHealth.Constants;
 using CoreHealth.DTOs;
 using CoreHealth.Models;
+using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Implements
 {
     public class ClinicService : IClinicService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private ClinicService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env) {
-            _uploadSettings = uploadSettings;
+        public ClinicService(ApplicationDbContext context) {
             _context = context;
-            _env = env;
         }
         public async Task<List<ClinicDTO>> GetAllAsync() {
             var clinics = await _context.Clinic
@@ -27,7 +24,9 @@ namespace CoreHealth.Services
                     Name = c.Name,
                     Description = c.Description,
                     DoctorId = c.DoctorId,
-                    DoctorName = d.Name != null ? d.Name:"Doctor no asignado a este consultorio"
+                    DoctorName = d.Name != null ? d.Name:"Doctor no asignado a este consultorio",
+                    Active = c.Active,
+
                 }
                 )
                 .ToListAsync();
@@ -42,7 +41,10 @@ namespace CoreHealth.Services
                     Id = c.Id,
                     Name = c.Name,
                     Description = c.Description,
-                    DoctorId = c.DoctorId != null ? c.DoctorId:0
+                    DoctorId = c.DoctorId != null ? c.DoctorId:0,
+                    Active = c.Active,
+                    IsDelete = c.IsDelete,
+                    HighSystem = c.HighSystem
 
                 })
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -56,6 +58,9 @@ namespace CoreHealth.Services
             {
                 Name = clinicDTO.Name,
                 Description = clinicDTO.Description,
+                Active = clinicDTO.Active,
+                IsDelete= clinicDTO.IsDelete,
+                HighSystem= clinicDTO.HighSystem
             };
             await _context.Clinic.AddAsync(clinic);
             await _context.SaveChangesAsync();
@@ -69,6 +74,9 @@ namespace CoreHealth.Services
             clinic.Name = clinictDTO.Name;
             clinic.Description = clinictDTO.Description;           
             clinic.DoctorId = clinic.DoctorId;
+            clinic.Active = clinic.Active;
+            clinic.IsDelete = clinic.IsDelete;
+            clinic.HighSystem = clinic.HighSystem;
             _context.Clinic.Update(clinic);
             await _context.SaveChangesAsync();
 
@@ -78,7 +86,8 @@ namespace CoreHealth.Services
             var clinic = await _context.Clinic
                 .FindAsync(id);
             if (clinic == null) throw new ApplicationException("Consultorio no encontrado");
-            _context.Clinic.Remove(clinic);
+            clinic.IsDelete = true;
+            clinic.Active = false;
             await _context.SaveChangesAsync();
         }
     }

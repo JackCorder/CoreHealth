@@ -2,7 +2,7 @@
 
 namespace CoreHealth.Models
 {
-    public class Appointment
+    public class Appointment : Registry
     {
         public int Id { get; set; }
         [Required]

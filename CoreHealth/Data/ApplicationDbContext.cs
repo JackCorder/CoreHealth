@@ -1,7 +1,7 @@
 ﻿using CoreHealth.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceRESTGen6.Data
+namespace CoreHealth.Data
 {
     public class ApplicationDbContext : DbContext
     {

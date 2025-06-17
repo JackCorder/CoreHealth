@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Win32;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreHealth.Models
 {
-    public class Service
+    public class Service : Registry
     {
         public int Id { get; set; }
         [Required]

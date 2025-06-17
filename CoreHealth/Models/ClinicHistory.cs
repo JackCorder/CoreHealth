@@ -1,6 +1,6 @@
 ﻿namespace CoreHealth.Models
 {
-    public class ClinicHistory
+    public class ClinicHistory : Registry
     {
         public int Id { get; set; }
         public int PatientId { get; set; }

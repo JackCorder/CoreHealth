@@ -1,21 +1,18 @@
 ﻿using CoreHealth.DTOs;
 using CoreHealth.Models;
+using CoreHealth.Services.Interfaces;
 using CoreHealth.Settings;
-using EcommerceRESTGen6.Data;
+using CoreHealth.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoreHealth.Services
+namespace CoreHealth.Services.Implements
 {
     public class AppointmentService:IAppointmentService
     {
-        private readonly UploadSettings _uploadSettings;
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private AppointmentService(UploadSettings uploadSettings, ApplicationDbContext context, IWebHostEnvironment env)
+        public AppointmentService(ApplicationDbContext context)
         {
-            _uploadSettings = uploadSettings;
             _context = context;
-            _env = env;
         }
         public async Task<List<AppointmentDTO>> GetAllAsync()
         {
@@ -29,7 +26,10 @@ namespace CoreHealth.Services
             Reason = a.Reason,
             Diagnostic = a.Diagnostic,
             Treatment = a.Treatment,
-            ServiceId = a.ServiceId
+            ServiceId = a.ServiceId,
+            Active = a.Active,
+            IsDelete = a.IsDelete,
+            HighSystem = a.HighSystem,
         })
         .ToListAsync();
 
@@ -48,7 +48,10 @@ namespace CoreHealth.Services
                     Reason = a.Reason,
                     Diagnostic = a.Diagnostic,
                     Treatment = a.Treatment,
-                    ServiceId = a.ServiceId
+                    ServiceId = a.ServiceId,
+                    Active = a.Active,
+                    IsDelete = a.IsDelete,
+                    HighSystem = a.HighSystem,
 
                 })
                 .FirstOrDefaultAsync(a => a.Id == id);
@@ -67,7 +70,10 @@ namespace CoreHealth.Services
                 Reason = AppointmentDTO.Reason,
                 Diagnostic = AppointmentDTO.Diagnostic,
                 Treatment = AppointmentDTO.Treatment,
-                ServiceId = AppointmentDTO.ServiceId
+                ServiceId = AppointmentDTO.ServiceId,
+                Active = AppointmentDTO.Active,
+                IsDelete = AppointmentDTO.IsDelete,
+                HighSystem = AppointmentDTO.HighSystem,
             };
             await _context.Appointment.AddAsync(Appointment);
             await _context.SaveChangesAsync();
@@ -85,6 +91,9 @@ namespace CoreHealth.Services
             Appointment.Diagnostic = AppointmenttDTO.Diagnostic;
             Appointment.Treatment = Appointment.Treatment;
             Appointment.ServiceId = AppointmenttDTO.ServiceId;
+            Appointment.Active = AppointmenttDTO.Active;
+            Appointment.HighSystem = AppointmenttDTO.HighSystem;
+            Appointment.IsDelete = AppointmenttDTO.IsDelete;
             _context.Appointment.Update(Appointment);
             await _context.SaveChangesAsync();
 
@@ -94,7 +103,9 @@ namespace CoreHealth.Services
             var Appointment = await _context.Appointment
                 .FindAsync(id);
             if (Appointment == null) throw new ApplicationException("Consultorio no encontrado");
-            _context.Appointment.Remove(Appointment);
+            Appointment.IsDelete = true;
+            Appointment.Active = false;
+            _context.Appointment.Update(Appointment);
             await _context.SaveChangesAsync();
         }
     }
