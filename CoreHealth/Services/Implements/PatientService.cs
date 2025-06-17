@@ -75,6 +75,8 @@ namespace CoreHealth.Services.Implements
 
             await _context.Patient.AddAsync(patient);
             await _context.SaveChangesAsync();
+
+            patientDTO.Id = patient.Id;
         }
         public async Task UpdateAsync(PatientDTO patientDTO)
         {

@@ -62,9 +62,18 @@ namespace CoreHealth.Services.Implements
                 AppointmentId = prescriptionDTO.AppointmentId,
                 Date = prescriptionDTO.Date
             };
+            try
+            {
+                await _context.Prescription.AddAsync(prescription);
+                await _context.SaveChangesAsync();
 
-            await _context.Prescription.AddAsync(prescription);
-            await _context.SaveChangesAsync();
+            }
+            catch(Exception ex) 
+            {
+                throw new ApplicationException(ex.Message);
+            }
+
+            prescriptionDTO.Id = prescription.Id;
         }
         public async Task UpdateAsync(PrescriptionDTO prescriptionDTO)
         {

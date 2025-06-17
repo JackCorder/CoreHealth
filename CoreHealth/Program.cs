@@ -24,11 +24,14 @@ builder.Services.Configure<UploadSettings>
 
 
 //Services
+builder.Services.AddScoped<IMedicationService, MedicationService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IClinicHistoryService, ClinicHistoryService>();
-/*builder.Services.AddScoped<IClinicService, ClinicService>();
-builder.Services.AddScoped<IDoctorService, DoctorService>();*/
+builder.Services.AddScoped<IClinicService, ClinicService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IPrescriptionMedicationService, PrescriptionMedicationService>();
 
 
