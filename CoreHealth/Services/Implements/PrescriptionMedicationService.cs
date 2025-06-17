@@ -60,9 +60,16 @@ namespace CoreHealth.Services.Implements
                 Frequency = prescriptionMedicationDTO.Frequency,
                 Duration = prescriptionMedicationDTO.Duration
             };
-            await _context.PrescriptionMedication.AddAsync(prescriptionMedication);
-            await _context.SaveChangesAsync();
-            prescriptionMedicationDTO.Id = prescriptionMedication.Id;
+            try
+            {
+                await _context.PrescriptionMedication.AddAsync(prescriptionMedication);
+                await _context.SaveChangesAsync();
+                prescriptionMedicationDTO.Id = prescriptionMedication.Id;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
         public async Task UpdateAsync(PrescriptionMedicationDTO prescriptionMedicationDTO)
         {

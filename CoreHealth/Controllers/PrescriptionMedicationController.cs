@@ -38,7 +38,7 @@ namespace CoreHealth.Controllers
 
         // POST api/<clinicController>
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] PrescriptionMedicationDTO prescriptionMedicationDTO)
+        public async Task<IActionResult> Create([FromBody] PrescriptionMedicationDTO prescriptionMedicationDTO)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace CoreHealth.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] PrescriptionMedicationDTO prescriptionMedicationDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] PrescriptionMedicationDTO prescriptionMedicationDTO)
         {
             if (id != prescriptionMedicationDTO.Id)
                 return BadRequest(new { message = "El ID proporcionado no coincide con el objeto" });
