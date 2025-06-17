@@ -39,7 +39,7 @@ namespace CoreHealth.Controllers
 
         // POST api/<clinicController>
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] ClinicHistoryDTO clinicHistoryDTO)
+        public async Task<IActionResult> Create([FromBody] ClinicHistoryDTO clinicHistoryDTO)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace CoreHealth.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] ClinicHistoryDTO clinicHistoryDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] ClinicHistoryDTO clinicHistoryDTO)
         {
             if (id != clinicHistoryDTO.Id)
                 return BadRequest(new { message = Messages.Error.MedicalRecordNotFound});
