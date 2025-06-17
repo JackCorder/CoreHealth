@@ -42,6 +42,7 @@
             public const string MedicationNotFoundWithId = "No se encontró el medicamento con ID {0}";
             public const string MedicationNotFound = "Medicamento no encontrado";
             public const string PatientNotFound = "Paciente no encontrado";
+            public const string PatientNSSExist = "Ya hay un paciente con el NSS que se desea ingrsar";
             public const string DoctorNotFound = "Médico no encontrado";
             public const string OfficeNotFound = "Consultorio médico no encontrado";
             public const string ServiceNotFound = "Servicio médico no encontrado";
