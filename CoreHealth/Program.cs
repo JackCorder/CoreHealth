@@ -1,6 +1,7 @@
 using CoreHealth.Settings;
 using EcommerceRESTGen6.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,16 @@ builder.Services.Configure<UploadSettings>
 
 
 
+// Agregar servicios CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +42,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Usar CORS
+app.UseCors("AllowAngularApp");
+
+//Servir archivos estáticos (como imágenes, CSS, JS, etc.)
+//app.UseStaticFiles(); //Permite servir archivos estáticos desde la carpeta wwwroot
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Uploads")
+        ),
+    RequestPath = "/Uploads"
+}); //Sirve para que los archivos subidos se puedan acceder desde la ruta /Uploads (Proporciona archivos al front   )
+
 
 app.UseAuthorization();
 
