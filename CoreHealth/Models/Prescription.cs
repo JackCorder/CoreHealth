@@ -2,7 +2,7 @@
 
 namespace CoreHealth.Models
 {
-    public class Prescription
+    public class Prescription : Registry
     {
         public int Id { get; set; }
         [Required]

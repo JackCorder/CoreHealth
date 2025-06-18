@@ -2,7 +2,7 @@
 
 namespace CoreHealth.DTOs
 {
-    public class MedicationDTO
+    public class MedicationDTO : RegistryDTO
     {
         public int Id { get; set; }
 
@@ -22,7 +22,11 @@ namespace CoreHealth.DTOs
         public string AdministrationWay { get; set; }
 
 
-        public string UrlImage { get; set; }
+        public string? UrlImage { get; set; }
+
+        public IFormFile? File { get; set; } // Para recibir el archivo de imagen
+
+
 
     }
 }
