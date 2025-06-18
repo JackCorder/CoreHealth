@@ -83,7 +83,6 @@ namespace CoreHealth.Services.Implements
             prescriptionMedication.Duration = prescriptionMedicationDTO.Duration;
             _context.PrescriptionMedication.Update(prescriptionMedication);
             await _context.SaveChangesAsync();
-
         }
         public async Task DeleteAsync(int id)
         {
