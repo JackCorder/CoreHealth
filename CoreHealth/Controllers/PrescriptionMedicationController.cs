@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreHealth.Controllers
 {
-    [Route("api/prescriptions")]
+    [Route("api/prescriptions-medication")]
     [ApiController]
     public class PrescriptionMedicationController : ControllerBase
     {
