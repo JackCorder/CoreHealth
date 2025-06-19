@@ -17,7 +17,7 @@ namespace CoreHealth.Services.Implements
         public async Task<List<ClinicDTO>> GetAllAsync() {
             var clinics = await _context.Clinic
                 .SelectMany(c => _context.Doctor
-                .Where(d=> d.Id == c.DoctorId)
+                .Where(d=> d.Id == c.DoctorId && !d.IsDelete)
                 .DefaultIfEmpty(),
                 (c,d)=> new ClinicDTO { 
                     Id = c.Id,
