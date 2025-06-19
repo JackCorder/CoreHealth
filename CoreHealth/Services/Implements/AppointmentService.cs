@@ -17,6 +17,7 @@ namespace CoreHealth.Services.Implements
         public async Task<List<AppointmentDTO>> GetAllAsync()
         {
             var appointments = await _context.Appointment
+                .Where(a=>!a.IsDelete)
         .Select(static a => new AppointmentDTO
         {
             Id = a.Id,

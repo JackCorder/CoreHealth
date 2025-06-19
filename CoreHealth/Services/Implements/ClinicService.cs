@@ -16,6 +16,7 @@ namespace CoreHealth.Services.Implements
         }
         public async Task<List<ClinicDTO>> GetAllAsync() {
             var clinics = await _context.Clinic
+                .Where(c=> !c.IsDelete)
                 .SelectMany(c => _context.Doctor
                 .Where(d=> d.Id == c.DoctorId)
                 .DefaultIfEmpty(),
@@ -58,6 +59,7 @@ namespace CoreHealth.Services.Implements
             {
                 Name = clinicDTO.Name,
                 Description = clinicDTO.Description,
+                DoctorId = clinicDTO.DoctorId,
                 Active = clinicDTO.Active,
                 IsDelete= clinicDTO.IsDelete,
                 HighSystem= clinicDTO.HighSystem
@@ -73,10 +75,10 @@ namespace CoreHealth.Services.Implements
             if (clinic == null) throw new ApplicationException("Consultorio no encontrado");
             clinic.Name = clinictDTO.Name;
             clinic.Description = clinictDTO.Description;           
-            clinic.DoctorId = clinic.DoctorId;
-            clinic.Active = clinic.Active;
-            clinic.IsDelete = clinic.IsDelete;
-            clinic.HighSystem = clinic.HighSystem;
+            clinic.DoctorId = clinictDTO.DoctorId;
+            clinic.Active = clinictDTO.Active;
+            clinic.IsDelete = clinictDTO.IsDelete;
+            clinic.HighSystem = clinictDTO.HighSystem;
             _context.Clinic.Update(clinic);
             await _context.SaveChangesAsync();
 
