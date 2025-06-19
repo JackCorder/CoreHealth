@@ -58,6 +58,7 @@ namespace CoreHealth.Services.Implements
             {
                 Name = clinicDTO.Name,
                 Description = clinicDTO.Description,
+                DoctorId = clinicDTO.DoctorId,
                 Active = clinicDTO.Active,
                 IsDelete= clinicDTO.IsDelete,
                 HighSystem= clinicDTO.HighSystem

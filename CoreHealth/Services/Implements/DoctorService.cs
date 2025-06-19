@@ -17,6 +17,7 @@ namespace CoreHealth.Services.Implements
         public async Task<List<DoctorDTO>> GetAllAsync()
         {
             var doctors = await _context.Doctor
+                .Where(d=>!d.IsDelete)
                 .Select(static d => new DoctorDTO
                 {
                     Id = d.Id,
