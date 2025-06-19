@@ -64,10 +64,7 @@ namespace CoreHealth.Services.Implements
                 Area = doctorDTO.Area,
                 License = doctorDTO.License,
                 Phone = doctorDTO.Phone,
-                Email = doctorDTO.Email,
-                Active = doctorDTO.Active,
-                IsDelete = doctorDTO.IsDelete,
-                HighSystem = doctorDTO.HighSystem,
+                Email = doctorDTO.Email
             };
 
             await _context.Doctor.AddAsync(doctor);
