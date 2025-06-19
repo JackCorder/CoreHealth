@@ -4,6 +4,7 @@ using CoreHealth.DTOs;
 using CoreHealth.Models;
 using CoreHealth.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoreHealth.Services.Implements
 {
@@ -62,15 +63,10 @@ namespace CoreHealth.Services.Implements
         }
         public async Task AddAsync(PatientDTO patientDTO)
         {
-            //verificar que no exista ya el nss previamente:
-            var nss = _context.Patient
-                .Select(p => new PatientDTO
-                {
-                    NSS = p.NSS
-                })
-                .FirstOrDefault(p => p.NSS == patientDTO.NSS);
+            // Verificar si ya existe el NSS
+            bool exists = await _context.Patient.AnyAsync(p => p.NSS == patientDTO.NSS);
 
-            if (nss.NSS == patientDTO.NSS)
+            if (exists)
             {
                 throw new ApplicationException(Messages.Error.PatientNSSExist);
             }
